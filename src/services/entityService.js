@@ -1,3 +1,5 @@
+// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+
 import { loadCollection, saveCollection } from "./storage";
 
 // Tạo 1 service CRUD đơn giản cho 1 entity, lưu trên localStorage.

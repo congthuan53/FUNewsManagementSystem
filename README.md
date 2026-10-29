@@ -5,6 +5,9 @@ This is Assignment 01 of SBA301 — "Working with ReactJS application". Only the
 ReactJS frontend is implemented; there is no real backend/database, as allowed
 by the assignment (mock data persisted in `localStorage`).
 
+## Getting started
+Link github: https://github.com/congthuan53/FUNewsManagementSystem
+
 ## Tech stack
 
 - React 19 + Vite

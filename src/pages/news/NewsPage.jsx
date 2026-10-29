@@ -1,3 +1,5 @@
+// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+
 import { useEffect, useState } from "react";
 import { newsService, categoryService } from "../../services";
 import { useAuth } from "../../context/AuthContext";

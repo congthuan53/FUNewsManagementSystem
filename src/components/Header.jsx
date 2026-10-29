@@ -1,3 +1,5 @@
+// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { useAuth } from "../context/AuthContext";

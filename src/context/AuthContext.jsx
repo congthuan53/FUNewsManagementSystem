@@ -1,3 +1,5 @@
+// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+
 import { createContext, useContext, useState } from "react";
 import { userService } from "../services";
 
