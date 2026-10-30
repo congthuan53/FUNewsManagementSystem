@@ -1,7 +1,10 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Trang quản lý User/Account: cùng cấu trúc CategoryPage/NewsPage
+// (Read + Search + Create/Update qua dialog + Delete có xác nhận).
 
 import { useEffect, useState } from "react";
-import { userService } from "../../services";
+import { getUsers, addUser, updateUser, deleteUser } from "../../api/userApi";
 import SearchBar from "../../components/SearchBar";
 import StatusBadge from "../../components/StatusBadge";
 import ConfirmDialog from "../../components/ConfirmDialog";
@@ -17,11 +20,11 @@ export default function UserPage() {
   const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
-    setUsers(userService.getAll());
+    setUsers(getUsers());
   }, []);
 
-  const filtered = users.filter((u) =>
-    u.username.toLowerCase().includes(keyword.trim().toLowerCase())
+  const filtered = users.filter((user) =>
+    user.username.toLowerCase().includes(keyword.trim().toLowerCase())
   );
 
   function openCreate() {
@@ -39,20 +42,20 @@ export default function UserPage() {
     setSelected(null);
   }
 
-  function handleSubmit(data) {
+  function handleSubmit(formData) {
     if (dialogMode === "create") {
-      const { items } = userService.create(data);
-      setUsers(items);
-    } else if (dialogMode === "update" && selected) {
-      const items = userService.update(selected.id, data);
-      setUsers(items);
+      const updatedList = addUser(formData);
+      setUsers(updatedList);
+    } else if (dialogMode === "update") {
+      const updatedList = updateUser(selected.id, formData);
+      setUsers(updatedList);
     }
     closeDialog();
   }
 
   function handleDeleteConfirm() {
-    const items = userService.remove(deleting.id);
-    setUsers(items);
+    const updatedList = deleteUser(deleting.id);
+    setUsers(updatedList);
     setDeleting(null);
   }
 
@@ -91,7 +94,7 @@ export default function UserPage() {
                 <td>{user.id}</td>
                 <td>{user.username}</td>
                 <td>{user.fullName}</td>
-                <td>{roleLabel[user.role] || user.role}</td>
+                <td>{roleLabel[user.role]}</td>
                 <td>
                   <StatusBadge status={user.status} />
                 </td>

@@ -1,7 +1,7 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
 
 // Dữ liệu mock ban đầu. Chỉ được dùng để nạp vào localStorage lần đầu tiên,
-// sau đó mọi CRUD sẽ thao tác trên localStorage (xem src/services/*).
+// sau đó mọi CRUD sẽ thao tác trên localStorage (xem src/api/*).
 
 export const seedCategories = [
   { id: 1, name: "Education", status: 1 },

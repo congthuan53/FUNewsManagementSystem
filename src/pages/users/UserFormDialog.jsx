@@ -1,4 +1,8 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Popup form Create/Update cho User. Có thêm 2 việc riêng so với
+// Category/News: (1) kiểm tra username không được trùng với user khác,
+// (2) khi Update mà để trống ô password thì giữ nguyên password cũ.
 
 import { useState } from "react";
 import Modal from "../../components/Modal";
@@ -25,17 +29,31 @@ export default function UserFormDialog({ mode, initialData, existingUsers, onClo
       return;
     }
 
-    const duplicate = existingUsers.some(
-      (u) => u.username === form.username.trim() && u.id !== initialData?.id
+    // Kiểm tra trùng username: lấy id của user đang sửa (nếu đang Update)
+    // để loại chính nó ra khi so sánh, tránh báo trùng với chính nó.
+    let editingUserId = null;
+    if (initialData) {
+      editingUserId = initialData.id;
+    }
+
+    const isDuplicate = existingUsers.some(
+      (user) => user.username === form.username.trim() && user.id !== editingUserId
     );
-    if (duplicate) {
+    if (isDuplicate) {
       setError("This username already exists.");
       return;
     }
 
+    // Password: nếu người dùng có nhập thì lấy giá trị mới;
+    // nếu để trống khi Update thì giữ nguyên password cũ.
+    let passwordToSave = form.password.trim();
+    if (!passwordToSave && initialData) {
+      passwordToSave = initialData.password;
+    }
+
     onSubmit({
       username: form.username.trim(),
-      password: form.password.trim() || initialData?.password || "",
+      password: passwordToSave,
       fullName: form.fullName.trim(),
       role: Number(form.role),
       status: Number(form.status),

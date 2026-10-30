@@ -1,7 +1,12 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Trang Dashboard: chỉ đọc dữ liệu (không có Create/Update/Delete),
+// đếm số lượng record và số record đang active cho 3 loại dữ liệu.
 
 import { useEffect, useState } from "react";
-import { categoryService, newsService, userService } from "../services";
+import { getCategories } from "../api/categoryApi";
+import { getNews } from "../api/newsApi";
+import { getUsers } from "../api/userApi";
 
 export default function DashboardPage() {
   const [stats, setStats] = useState({
@@ -14,9 +19,9 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    const categories = categoryService.getAll();
-    const news = newsService.getAll();
-    const users = userService.getAll();
+    const categories = getCategories();
+    const news = getNews();
+    const users = getUsers();
 
     setStats({
       categories: categories.length,

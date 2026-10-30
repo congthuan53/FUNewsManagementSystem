@@ -1,18 +1,20 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Trang Settings: cho phép user đang đăng nhập đổi tên hiển thị (fullName)
+// của chính mình. Đây là 1 ví dụ Update đơn giản, chỉ có 1 field.
 
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { userService } from "../services";
+import { updateUser } from "../api/userApi";
 
 export default function SettingsPage() {
   const { currentUser } = useAuth();
-  const [fullName, setFullName] = useState(currentUser?.fullName || "");
+  const [fullName, setFullName] = useState(currentUser.fullName);
   const [saved, setSaved] = useState(false);
 
   function handleSave(e) {
     e.preventDefault();
-    if (!currentUser) return;
-    userService.update(currentUser.id, { fullName: fullName.trim() });
+    updateUser(currentUser.id, { fullName: fullName.trim() });
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }
@@ -22,7 +24,7 @@ export default function SettingsPage() {
       <h2 className="page-title">Settings</h2>
       <form className="settings-form" onSubmit={handleSave}>
         <label htmlFor="settings-username">Username</label>
-        <input id="settings-username" type="text" value={currentUser?.username || ""} disabled />
+        <input id="settings-username" type="text" value={currentUser.username} disabled />
 
         <label htmlFor="settings-fullname">Full name</label>
         <input
@@ -36,7 +38,7 @@ export default function SettingsPage() {
         <input
           id="settings-role"
           type="text"
-          value={currentUser?.role === 1 ? "Admin" : "Staff"}
+          value={currentUser.role === 1 ? "Admin" : "Staff"}
           disabled
         />
 

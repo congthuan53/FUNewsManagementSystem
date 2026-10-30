@@ -13,7 +13,7 @@ Link github: https://github.com/congthuan53/FUNewsManagementSystem
 - React 19 + Vite
 - React Router (client-side navigation, protected admin routes)
 - Plain CSS (no UI framework) — see `src/index.css`
-- Mock data layer on top of `localStorage` (see `src/services`)
+- Mock data layer on top of `localStorage` (see `src/api`)
 
 ## Getting started
 
@@ -75,7 +75,8 @@ src/
   components/    Header, Sidebar, AdminLayout, Modal, ConfirmDialog, ...
   context/       AuthContext (mock login/logout, currentUser)
   data/          seedData.js (initial mock data)
-  services/      localStorage-backed CRUD services per entity
+  api/           categoryApi.js, newsApi.js, userApi.js (plain CRUD
+                 functions per entity, reading/writing localStorage)
   pages/
     LoginPage.jsx
     DashboardPage.jsx

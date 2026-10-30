@@ -1,13 +1,23 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Popup form Create/Update cho News. Cùng cấu trúc với CategoryFormDialog,
+// chỉ có thêm 1 ô select để chọn Category (quan hệ categoryId).
 
 import { useState } from "react";
 import Modal from "../../components/Modal";
 
+// Form rỗng dùng khi tạo mới. Category mặc định chọn là category đầu tiên
+// trong danh sách (nếu đã có category) để select không bị để trống.
 function emptyForm(categories) {
+  let defaultCategoryId = "";
+  if (categories.length > 0) {
+    defaultCategoryId = categories[0].id;
+  }
+
   return {
     title: "",
     content: "",
-    categoryId: categories[0]?.id ?? "",
+    categoryId: defaultCategoryId,
     status: 1,
     tags: "",
   };
@@ -23,6 +33,7 @@ export default function NewsFormDialog({ mode, initialData, categories, currentU
 
   function handleSubmit(e) {
     e.preventDefault();
+
     if (!form.title.trim()) {
       setError("Title is required.");
       return;
@@ -32,13 +43,22 @@ export default function NewsFormDialog({ mode, initialData, categories, currentU
       return;
     }
 
+    // Khi Update, giữ nguyên người tạo ban đầu (createdBy cũ).
+    // Khi Create, lấy username người đang đăng nhập làm người tạo.
+    let createdBy = "Admin";
+    if (initialData) {
+      createdBy = initialData.createdBy;
+    } else if (currentUser) {
+      createdBy = currentUser.username;
+    }
+
     onSubmit({
       title: form.title.trim(),
       content: form.content.trim(),
       categoryId: Number(form.categoryId),
       status: Number(form.status),
       tags: form.tags.trim(),
-      createdBy: initialData?.createdBy || currentUser?.username || "Admin",
+      createdBy,
     });
   }
 

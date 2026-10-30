@@ -1,7 +1,12 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Trang quản lý News: giống hệt cấu trúc CategoryPage (Read + Search +
+// Create/Update qua dialog + Delete có xác nhận), chỉ khác là News có thêm
+// field categoryId -> cần load thêm danh sách Category để hiển thị tên.
 
 import { useEffect, useState } from "react";
-import { newsService, categoryService } from "../../services";
+import { getNews, addNews, updateNews, deleteNews } from "../../api/newsApi";
+import { getCategories } from "../../api/categoryApi";
 import { useAuth } from "../../context/AuthContext";
 import SearchBar from "../../components/SearchBar";
 import StatusBadge from "../../components/StatusBadge";
@@ -10,6 +15,7 @@ import NewsFormDialog from "./NewsFormDialog";
 
 export default function NewsPage() {
   const { currentUser } = useAuth();
+
   const [news, setNews] = useState([]);
   const [categories, setCategories] = useState([]);
   const [keyword, setKeyword] = useState("");
@@ -18,16 +24,19 @@ export default function NewsPage() {
   const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
-    setNews(newsService.getAll());
-    setCategories(categoryService.getAll());
+    setNews(getNews());
+    setCategories(getCategories());
   }, []);
 
-  function categoryName(categoryId) {
-    return categories.find((c) => c.id === categoryId)?.name || "Unknown";
+  // News chỉ lưu categoryId (số), nên cần tra trong danh sách category
+  // để lấy ra tên category hiển thị trên bảng.
+  function getCategoryName(categoryId) {
+    const found = categories.find((category) => category.id === categoryId);
+    return found ? found.name : "Unknown";
   }
 
-  const filtered = news.filter((n) =>
-    n.title.toLowerCase().includes(keyword.trim().toLowerCase())
+  const filtered = news.filter((article) =>
+    article.title.toLowerCase().includes(keyword.trim().toLowerCase())
   );
 
   function openCreate() {
@@ -45,20 +54,20 @@ export default function NewsPage() {
     setSelected(null);
   }
 
-  function handleSubmit(data) {
+  function handleSubmit(formData) {
     if (dialogMode === "create") {
-      const { items } = newsService.create(data);
-      setNews(items);
-    } else if (dialogMode === "update" && selected) {
-      const items = newsService.update(selected.id, data);
-      setNews(items);
+      const updatedList = addNews(formData);
+      setNews(updatedList);
+    } else if (dialogMode === "update") {
+      const updatedList = updateNews(selected.id, formData);
+      setNews(updatedList);
     }
     closeDialog();
   }
 
   function handleDeleteConfirm() {
-    const items = newsService.remove(deleting.id);
-    setNews(items);
+    const updatedList = deleteNews(deleting.id);
+    setNews(updatedList);
     setDeleting(null);
   }
 
@@ -96,7 +105,7 @@ export default function NewsPage() {
               <tr key={article.id}>
                 <td>{article.id}</td>
                 <td>{article.title}</td>
-                <td>{categoryName(article.categoryId)}</td>
+                <td>{getCategoryName(article.categoryId)}</td>
                 <td>{article.createdBy}</td>
                 <td>
                   <StatusBadge status={article.status} />

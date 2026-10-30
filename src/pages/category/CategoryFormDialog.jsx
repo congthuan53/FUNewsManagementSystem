@@ -1,4 +1,9 @@
-// Author: Tran Cong Thuan | Date: 29/10/2026 | Assignment: Assignment 1
+// Author: Tran Cong Thuan | Date: 30/10/2026 | Assignment: Assignment 1
+//
+// Popup form dùng chung cho cả 2 trường hợp: Create (mode = "create") và
+// Update (mode = "update"). Component CHA (CategoryPage) quyết định mode và
+// truyền initialData xuống: Create thì initialData = null (form rỗng),
+// Update thì initialData = category đang sửa (form được fill sẵn dữ liệu cũ).
 
 import { useState } from "react";
 import Modal from "../../components/Modal";
@@ -6,6 +11,7 @@ import Modal from "../../components/Modal";
 const emptyForm = { name: "", status: 1 };
 
 export default function CategoryFormDialog({ mode, initialData, onClose, onSubmit }) {
+  // Nếu có initialData (Update) thì copy dữ liệu đó vào form, không thì dùng form rỗng (Create).
   const [form, setForm] = useState(initialData ? { ...initialData } : emptyForm);
   const [error, setError] = useState("");
 
@@ -14,11 +20,15 @@ export default function CategoryFormDialog({ mode, initialData, onClose, onSubmi
   }
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault(); // chặn trình duyệt tự reload trang khi submit form
+
     if (!form.name.trim()) {
       setError("Category name is required.");
       return;
     }
+
+    // Form chỉ validate + gói dữ liệu lại, việc lưu xuống localStorage do
+    // CategoryPage (component cha) quyết định, qua callback onSubmit.
     onSubmit({ name: form.name.trim(), status: Number(form.status) });
   }
 
